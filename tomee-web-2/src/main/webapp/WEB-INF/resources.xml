@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- We inject a Johnzon configuration which respects long ISO8601 date formats-->
+    <Service id="johnzon" class-name="org.apache.openejb.server.cxf.rs.johnzon.TomEEConfigurableJohnzon">
+        accessModeName = field
+        supportHiddenAccess = true
+        doCloseOnStreams = false
+        version = 2
+        skipNull = true
+        datePattern = yyyy-MM-dd'T'HH:mm:ss.SSSZ
+    </Service>
+</resources>

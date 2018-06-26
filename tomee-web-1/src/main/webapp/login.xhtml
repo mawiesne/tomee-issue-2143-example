@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>WEB-UI Cookies - Login</title>
+</h:head>
+<h:body>
+    <h:form>
+        <h2>WEB-UI Cookies</h2>
+        <h5>admin/secret or guest/n00b</h5>
+
+        <h:outputText value="Username" />
+        <h:inputText id="username" value="#{authenticationHandler.userName}"/>
+        <h:message for="username"/>
+        <br></br><br></br>
+
+        <h:outputText value="Password" />
+        <h:inputSecret id="password" value="#{authenticationHandler.password}"/>
+        <h:message for="password"/>
+        <br></br><br></br>
+
+        <h:commandButton action="#{authenticationHandler.login}" value="Login"/>
+    </h:form>
+</h:body>
+</html>

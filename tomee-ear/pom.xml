@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.github.mawiesne</groupId>
+        <artifactId>tomee-ear-context-issue</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>tomee-ear</artifactId>
+
+    <packaging>ear</packaging>
+
+    <properties>
+        <artifact.name>${project.artifactId}</artifact.name>
+        <artifact.version>${project.version}</artifact.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.mawiesne</groupId>
+            <artifactId>tomee-api</artifactId>
+            <version>${project.parent.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mawiesne</groupId>
+            <artifactId>tomee-shared-services-1</artifactId>
+            <version>${project.parent.version}</version>
+            <type>ejb</type>
+            <exclusions>
+                <!-- This dependency will be provided globally in the TomEE deployment -->
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mawiesne</groupId>
+            <artifactId>tomee-shared-services-2</artifactId>
+            <version>${project.parent.version}</version>
+            <type>ejb</type>
+            <exclusions>
+                <!-- This dependency will be provided globally in the TomEE deployment -->
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- web and ejb modules -->
+        <dependency>
+            <groupId>com.github.mawiesne</groupId>
+            <artifactId>tomee-web-1</artifactId>
+            <version>${project.parent.version}</version>
+            <type>war</type>
+            <exclusions>
+                <!-- This dependency will be provided globally in the TomEE deployment -->
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mawiesne</groupId>
+            <artifactId>tomee-web-2</artifactId>
+            <version>${project.parent.version}</version>
+            <type>war</type>
+            <exclusions>
+                <!-- This dependency will be provided globally in the TomEE deployment -->
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- external libraries -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <type>jar</type>
+            <exclusions>
+                <!-- This dependency will be provided globally in the TomEE deployment -->
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>jsf-myfaces</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.tomee.maven</groupId>
+                        <artifactId>tomee-maven-plugin</artifactId>
+                        <version>${tomee.plugin.version}</version>
+                        <configuration>
+                            <tomeeVersion>${tomee.version}</tomeeVersion>
+                            <tomeeClassifier>plus</tomeeClassifier>
+                            <debug>false</debug>
+                            <tomeeHttpPort>8787</tomeeHttpPort>
+                            <debugPort>5005</debugPort>
+                            <args>-Dfoo=bar</args>
+                            <config>${project.build.outputDirectory}/tomee-conf/</config>
+                            <libs>
+                                <!-- NOT Removing Apache MyFaces here -->
+                                <!--<lib>remove:myfaces</lib>-->
+                                <lib>log4j:log4j:${log4j.version}</lib>
+                            </libs>
+                            <systemVariables>
+                                <openejb.system.apps>true</openejb.system.apps>
+                                <tomee.remote.support>true</tomee.remote.support>
+                                <tomee.serialization.class.blacklist>-</tomee.serialization.class.blacklist>
+                            </systemVariables>
+                            <apps>
+                                <app>
+                                    com.github.mawiesne:${artifact.name}:${artifact.version}:ear
+                                </app>
+                            </apps>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>jsf-mojarra</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.tomee.maven</groupId>
+                        <artifactId>tomee-maven-plugin</artifactId>
+                        <version>${tomee.plugin.version}</version>
+                        <configuration>
+                            <tomeeVersion>${tomee.version}</tomeeVersion>
+                            <tomeeClassifier>plus</tomeeClassifier>
+                            <debug>false</debug>
+                            <tomeeHttpPort>8787</tomeeHttpPort>
+                            <debugPort>5005</debugPort>
+                            <args>-Dfoo=bar</args>
+                            <config>${project.build.outputDirectory}/tomee-conf/</config>
+                            <libs>
+                                <!-- Removing Apache MyFaces here explicitly, as we provide Mojarra container wide -->
+                                <lib>remove:myfaces</lib>
+                                <!-- Adding Mojarra JSF implementation  -->
+                                <lib>org.glassfish:javax.faces:${javax.faces.mojarra.version}</lib>
+
+                                <lib>log4j:log4j:${log4j.version}</lib>
+                            </libs>
+                            <systemVariables>
+                                <openejb.system.apps>true</openejb.system.apps>
+                                <tomee.remote.support>true</tomee.remote.support>
+                                <tomee.serialization.class.blacklist>-</tomee.serialization.class.blacklist>
+                            </systemVariables>
+                            <apps>
+                                <app>
+                                    com.github.mawiesne:${artifact.name}:${artifact.version}:ear
+                                </app>
+                            </apps>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>2.10.1</version>
+                <!-- configuring the ear plugin -->
+                <configuration>
+                    <defaultLibBundleDir>lib/</defaultLibBundleDir>
+                    <skinnyWars>true</skinnyWars>
+                    <modules>
+                        <webModule>
+                            <groupId>com.github.mawiesne</groupId>
+                            <artifactId>tomee-web-1</artifactId>
+                            <!--for beautification purpose -->
+                            <contextRoot>/cookie-webui</contextRoot>
+                        </webModule>
+                        <webModule>
+                            <groupId>com.github.mawiesne</groupId>
+                            <artifactId>tomee-web-2</artifactId>
+                            <!--for beautification purpose -->
+                            <contextRoot>/cookie-ws</contextRoot>
+                        </webModule>
+                        <ejbModule>
+                            <groupId>com.github.mawiesne</groupId>
+                            <artifactId>tomee-shared-services-1</artifactId>
+                        </ejbModule>
+                        <ejbModule>
+                            <groupId>com.github.mawiesne</groupId>
+                            <artifactId>tomee-shared-services-2</artifactId>
+                        </ejbModule>
+                        <jarModule>
+                            <groupId>com.github.mawiesne</groupId>
+                            <artifactId>tomee-api</artifactId>
+                            <includeInApplicationXml>true</includeInApplicationXml>
+                        </jarModule>
+                        <!--extra  libs   -->
+                        <jarModule>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>slf4j-log4j12</artifactId>
+                            <includeInApplicationXml>true</includeInApplicationXml>
+                        </jarModule>
+                        <jarModule>
+                            <groupId>log4j</groupId>
+                            <artifactId>log4j</artifactId>
+                            <includeInApplicationXml>true</includeInApplicationXml>
+                        </jarModule>
+                        <jarModule>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>slf4j-api</artifactId>
+                            <includeInApplicationXml>true</includeInApplicationXml>
+                        </jarModule>
+                    </modules>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>add-resource</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <source>
+                                    <directory>src/it/tomee</directory>
+                                </source>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

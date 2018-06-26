@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+    http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+    <application>
+        <locale-config>
+            <default-locale>en</default-locale>
+            <supported-locale>de</supported-locale>
+        </locale-config>
+    </application>
+
+    <converter>
+        <converter-id>omnifaces.SelectItemsConverter</converter-id>
+        <converter-class>org.omnifaces.converter.SelectItemsConverter</converter-class>
+    </converter>
+    <converter>
+        <converter-id>omnifaces.GenericEnumConverter</converter-id>
+        <converter-class>org.omnifaces.converter.GenericEnumConverter</converter-class>
+    </converter>
+    <component>
+        <component-type>org.omnifaces.component.validator.ValidateEqual</component-type>
+        <component-class>org.omnifaces.component.validator.ValidateEqual</component-class>
+    </component>
+    <component>
+        <component-type>org.omnifaces.component.output.GraphicImage</component-type>
+        <component-class>org.omnifaces.component.output.GraphicImage</component-class>
+    </component>
+    <converter>
+        <converter-for-class>java.lang.String</converter-for-class>
+        <converter-class>org.omnifaces.converter.TrimConverter</converter-class>
+    </converter>
+</faces-config>
