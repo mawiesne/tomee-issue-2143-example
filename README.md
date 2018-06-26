@@ -19,12 +19,6 @@ From the module _tomee-ear_ launch a TomEE Plus 7.0.4 container via the bundled 
 
 #### via Mojarra (2.3.x)
 
-Rebuild with 
-
-`mvn clean install -Pjsf-mojarra`
-
-and then
-
 `mvn tomee:run -Pjsf-mojarra`
 
 ##  Re-producing cookies...
