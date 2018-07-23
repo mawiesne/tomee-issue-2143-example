@@ -8,7 +8,7 @@ A simple EAR-demo project to reproduce https://issues.apache.org/jira/browse/TOM
 
 ## Running the EAR 
 
-From the module _tomee-ear_ launch a TomEE Plus 7.0.4 container via the bundled EAR file. Internally, it runs two WAR files: 
+From the module _tomee-ear_ launch a TomEE Plus 7.0.4 / 7.0.5 container via the bundled EAR file. Internally, it runs two WAR files: 
 
 1. a JSF WEB-UI (the relevant project for TOMEE-2143) 
 2. a RESTful web service (demonstrating a typical EAR use case). 
